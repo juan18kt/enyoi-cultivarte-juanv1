@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Pedir Cita</title>
+<meta charset="UTF-8">
+<title>Citas Barbería</title>
 </head>
 <body>
 
-<h2>Pedir una cita</h2>
+<h2>Reservar cita 💈</h2>
 
 <form id="formCita">
     <label>Nombre:</label><br>
@@ -15,34 +15,71 @@
     <label>Fecha:</label><br>
     <input type="date" id="fecha" required><br><br>
 
-    <label>Hora:</label><br>
-    <input type="time" id="hora" required><br><br>
+    <label>Hora disponible:</label><br>
+    <select id="hora" required></select><br><br>
 
-    <label>Motivo de la cita:</label><br>
-    <textarea id="motivo" required></textarea><br><br>
+    <label>Servicio:</label><br>
+    <select id="servicio" required>
+        <option value="Corte">Corte</option>
+        <option value="Barba">Barba</option>
+        <option value="Corte y Barba">Corte y Barba</option>
+    </select><br><br>
 
-    <button type="submit">Enviar cita</button>
+    <button type="submit">Reservar</button>
 </form>
 
 <script>
+const horasBase = [
+    "08:00","09:00","10:00","11:00",
+    "12:00","14:00","15:00","16:00","17:00"
+];
+
+const fechaInput = document.getElementById("fecha");
+const horaSelect = document.getElementById("hora");
+
+fechaInput.addEventListener("change", cargarHoras);
+
+function cargarHoras() {
+    horaSelect.innerHTML = "";
+    let citas = JSON.parse(localStorage.getItem("citas")) || [];
+    let fechaSeleccionada = fechaInput.value;
+
+    let horasOcupadas = citas
+        .filter(c => c.fecha === fechaSeleccionada)
+        .map(c => c.hora);
+
+    horasBase.forEach(hora => {
+        if (!horasOcupadas.includes(hora)) {
+            let option = document.createElement("option");
+            option.value = hora;
+            option.textContent = hora;
+            horaSelect.appendChild(option);
+        }
+    });
+
+    if (horaSelect.innerHTML === "") {
+        let option = document.createElement("option");
+        option.textContent = "No hay horas disponibles";
+        horaSelect.appendChild(option);
+    }
+}
+
 document.getElementById("formCita").addEventListener("submit", function(e) {
     e.preventDefault();
 
     let cita = {
         nombre: document.getElementById("nombre").value,
-        fecha: document.getElementById("fecha").value,
-        hora: document.getElementById("hora").value,
-        motivo: document.getElementById("motivo").value
+        fecha: fechaInput.value,
+        hora: horaSelect.value,
+        servicio: document.getElementById("servicio").value
     };
 
     let citas = JSON.parse(localStorage.getItem("citas")) || [];
     citas.push(cita);
     localStorage.setItem("citas", JSON.stringify(citas));
 
-    alert("Cita enviada correctamente");
+    alert("Cita reservada con éxito 💈");
     this.reset();
+    horaSelect.innerHTML = "";
 });
-</script>
-
-</body>
-</html>
+</scri

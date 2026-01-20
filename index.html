@@ -1,32 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Mi primera página</title>
+    <meta charset="UTF-8">
+    <title>Pedir Cita</title>
 </head>
 <body>
 
-  <h1>Hola, soy Juan</h1>
-  <p>Estoy aprendiendo HTML y este es mi primer proyecto.</p>
+<h2>Pedir una cita</h2>
 
-  <button onclick="saludar()">Haz clic aquí</button>
+<form id="formCita">
+    <label>Nombre:</label><br>
+    <input type="text" id="nombre" required><br><br>
 
-  <script>
-    function saludar() {
-      alert("espero seguir aprendiendo hasta manejar el java");
-    }
-  </script>
+    <label>Fecha:</label><br>
+    <input type="date" id="fecha" required><br><br>
 
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Mi página</title>
-</head>
-<body>
-  <h1>Funciona 🎉</h1>
-  <p>GitHub Pages activo</p>
+    <label>Hora:</label><br>
+    <input type="time" id="hora" required><br><br>
+
+    <label>Motivo de la cita:</label><br>
+    <textarea id="motivo" required></textarea><br><br>
+
+    <button type="submit">Enviar cita</button>
+</form>
+
+<script>
+document.getElementById("formCita").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let cita = {
+        nombre: document.getElementById("nombre").value,
+        fecha: document.getElementById("fecha").value,
+        hora: document.getElementById("hora").value,
+        motivo: document.getElementById("motivo").value
+    };
+
+    let citas = JSON.parse(localStorage.getItem("citas")) || [];
+    citas.push(cita);
+    localStorage.setItem("citas", JSON.stringify(citas));
+
+    alert("Cita enviada correctamente");
+    this.reset();
+});
+</script>
+
 </body>
 </html>
